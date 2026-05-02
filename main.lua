@@ -8,19 +8,15 @@ if not lPlayer and RunService:IsClient() then
     lPlayer = Players:GetPlayers()[1] or Players.PlayerAdded:Wait()
 end
 
--- 2. WHITELIST CHECK (Universal Version)
-local whitelistURL = "https://raw.githubusercontent.com/superpickle425/XeroaSS/refs/heads/main/whitelist.lua"
+-- 2. INTERNAL WHITELIST (No Connection Needed)
+local whitelistedIDs = {
+    [10691520493] = true,
+}
 
-local function fetchWhitelist()
-    if RunService:IsStudio() then
-        -- Use Studio's method
-        return game:GetService("HttpService"):GetAsync(whitelistURL)
-    else
-        -- Use Executor's method
-        return game:HttpGet(whitelistURL)
-    end
+if not whitelistedIDs[lPlayer.UserId] then
+    warn("Xeroa: Unauthorized User ID " .. lPlayer.UserId)
+    return
 end
-
 local success, whitelistData = pcall(fetchWhitelist)
 
 if success then
