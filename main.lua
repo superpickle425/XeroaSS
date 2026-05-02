@@ -1,8 +1,16 @@
 local Players = game:GetService("Players")
--- This fix ensures it works even if LocalPlayer is slow to load
-local lPlayer = Players.LocalPlayer or Players:GetPlayers()[1] 
+
+-- FIX for image_a64c1c.png:
+-- This waits until a player actually exists before trying to give them the UI.
+local lPlayer = Players.LocalPlayer
+if not lPlayer then
+    Players.PlayerAdded:Wait() -- Wait for you to join
+    lPlayer = Players.LocalPlayer or Players:GetPlayers()[1]
+end
+
 local PlayerGui = lPlayer:WaitForChild("PlayerGui")
 
+-- [[ YOUR SS ADMIN PANEL UI CODE STARTS HERE ]]
 -- 1. SILENT WHITELIST CHECK
 -- Update the URL below to your RAW GitHub link for whitelist.lua
 local whitelistURL = "https://raw.githubusercontent.com/YourName/Repo/main/whitelist.lua"
