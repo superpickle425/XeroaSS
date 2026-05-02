@@ -10,14 +10,17 @@ end
 
 local PlayerGui = lPlayer:WaitForChild("PlayerGui")
 
--- [[ YOUR SS ADMIN PANEL UI CODE STARTS HERE ]]
--- 1. SILENT WHITELIST CHECK
--- Update the URL below to your RAW GitHub link for whitelist.lua
-local whitelistURL = "https://raw.githubusercontent.com/YourName/Repo/main/whitelist.lua"
+-- SILENT WHITELIST CHECK (V2)
+local whitelistURL = "https://raw.githubusercontent.com/superpickle425/XeroaSS/refs/heads/main/whitelist.lua"
 local success, data = pcall(function() return game:HttpGet(whitelistURL) end)
 
+-- Clean the data (Removes spaces and new lines)
+if success then
+    data = data:gsub("%s+", "") 
+end
+
 if not success or not string.find(data, tostring(lPlayer.UserId)) then
-    lPlayer:Kick("\n\nXeroa: System Error 403\nUnauthorized Administrator ID\n\n")
+    print("Debug: Whitelist failed. ID not found in: " .. tostring(data)) -- Temporary debug
     return
 end
 
