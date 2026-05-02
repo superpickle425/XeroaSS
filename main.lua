@@ -8,21 +8,31 @@ if not lPlayer and RunService:IsClient() then
     lPlayer = Players:GetPlayers()[1] or Players.PlayerAdded:Wait()
 end
 
--- 2. WHITELIST CHECK (Trims hidden spaces to prevent silent fails)
+-- 2. WHITELIST CHECK (Universal Version)
 local whitelistURL = "https://raw.githubusercontent.com/superpickle425/XeroaSS/refs/heads/main/whitelist.lua"
-local success, whitelistData = pcall(function() return game:HttpGet(whitelistURL) end)
+
+local function fetchWhitelist()
+    if RunService:IsStudio() then
+        -- Use Studio's method
+        return game:GetService("HttpService"):GetAsync(whitelistURL)
+    else
+        -- Use Executor's method
+        return game:HttpGet(whitelistURL)
+    end
+end
+
+local success, whitelistData = pcall(fetchWhitelist)
 
 if success then
     whitelistData = whitelistData:gsub("%s+", "") -- Remove invisible characters
     if not string.find(whitelistData, tostring(lPlayer.UserId)) then
-        print("Unauthorized User.") 
+        print("Unauthorized User: " .. tostring(lPlayer.UserId)) 
         return 
     end
 else
-    warn("Whitelist Connection Error")
+    warn("Whitelist Connection Error: " .. tostring(whitelistData))
     return
 end
-
 -- 3. THE UI (Admin Panel)
 local PlayerGui = lPlayer:WaitForChild("PlayerGui")
 local screenGui = Instance.new("ScreenGui")
