@@ -1,6 +1,6 @@
--- [[ XEROA ADMIN SYSTEM - CORE ]]
 local Players = game:GetService("Players")
-local lPlayer = Players.LocalPlayer
+-- This fix ensures it works even if LocalPlayer is slow to load
+local lPlayer = Players.LocalPlayer or Players:GetPlayers()[1] 
 local PlayerGui = lPlayer:WaitForChild("PlayerGui")
 
 -- 1. SILENT WHITELIST CHECK
